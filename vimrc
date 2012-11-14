@@ -1,12 +1,15 @@
 source ~/.vim/bundles.vim
 
+" Set title on X window
+set title
+
 " encoding dectection
 set fileencodings=utf-8,gb2312,gb18030,gbk,ucs-bom,cp936,latin1
 
 " enable filetype dectection and ft specific plugin/indent
 filetype plugin indent on
 
-" enable syntax hightlight and completion 
+" enable syntax hightlight and completion
 syntax enable
 syntax on
 
@@ -17,6 +20,12 @@ color vividchalk
 au WinLeave * set nocursorline nocursorcolumn
 au WinEnter * set cursorline cursorcolumn
 set cursorline cursorcolumn
+
+" http://vim.wikia.com/wiki/Toggle_auto-indenting_for_code_paste
+" F2 = toggle paste mode
+nnoremap <F2> :set invpaste paste?<Enter>
+imap <F2> <C-O><F2>
+set pastetoggle=<F2>
 
 " search operations
 set incsearch
@@ -33,10 +42,13 @@ autocmd BufReadPost *
       \     endif |
       \ endif
 set nocompatible
-set nofoldenable                                                  " disable folding"
 set confirm                                                       " prompt when existing from an unsaved file
 set history=1000
 set backspace=indent,eol,start                                    " More powerful backspacing
+
+set nobackup                        " Don't make a backup before overwriting a file.
+set nowritebackup                   " And again.
+set noswapfile                      " Use an SCM instead of swap files
 
 " display settings
 set t_Co=256                                                      " Explicitly tell vim that the terminal has 256 colors "
@@ -44,7 +56,7 @@ set mouse=a                                                       " use mouse in
 set report=0                                                      " always report number of lines changed                "
 set nowrap                                                        " dont wrap lines
 set scrolloff=2                                                   " 2 lines above/below cursor when scrolling
-set number                                                        " show line numbers
+"set number                                                        " show line numbers
 set showmatch                                                     " show matching bracket (briefly jump)
 set showcmd                                                       " show typed command in status bar
 set title                                                         " show file in titlebar
@@ -55,20 +67,27 @@ set matchpairs+=<:>                                               " specially fo
 "set ruler                                                         " show cursor position in status bar
 "set showmode                                                      " show mode in status bar (insert/replace/...)
 
+"folding settings
+set foldmethod=marker
+set foldnestmax=10      "deepest fold is 10 levels
+set foldlevel=1
+set foldmarker={,}
+"folding colors
+hi Folded          guifg=#383838 guibg=#000000
+
 " Default Indentation
 set autoindent
 set smartindent     " indent when
 set tabstop=4       " tab width
-set softtabstop=4   " backspace & 
+set softtabstop=4   " backspace &
 set shiftwidth=4    " indent width
 "set textwidth=79
 set expandtab       " expand tab to space
-autocmd FileType php setlocal tabstop=2 shiftwidth=2 softtabstop=2 textwidth=120
+autocmd FileType php setlocal tabstop=4 shiftwidth=4 softtabstop=4 textwidth=120
 autocmd FileType ruby setlocal tabstop=2 shiftwidth=2 softtabstop=2 textwidth=79
-autocmd FileType php setlocal tabstop=4 shiftwidth=4 softtabstop=4 textwidth=79
-autocmd FileType coffee,javascript setlocal tabstop=2 shiftwidth=2 softtabstop=2 textwidth=79
-autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=4 textwidth=79
-autocmd FileType html,htmldjango,xhtml,haml setlocal tabstop=2 shiftwidth=2 softtabstop=2 textwidth=0
+autocmd FileType coffee,javascript setlocal tabstop=4 shiftwidth=4 softtabstop=4 textwidth=79
+autocmd FileType python setlocal tabstop=2 shiftwidth=2 softtabstop=2 textwidth=79
+autocmd FileType html,htmldjango,xhtml,haml setlocal tabstop=4 shiftwidth=4 softtabstop=4 textwidth=0
 autocmd FileType sass,scss,css setlocal tabstop=2 shiftwidth=2 softtabstop=2 textwidth=79
 
 " syntax support
@@ -115,7 +134,7 @@ let g:EasyMotion_leader_key = '<Leader>'
 let g:tagbar_left=1
 let g:tagbar_width=30
 let g:tagbar_autofocus = 1
-let g:tagbar_sort = 0 
+let g:tagbar_sort = 0
 let g:tagbar_compact = 1
 " tag for coffee
 if executable('coffeetags')
@@ -142,7 +161,7 @@ if executable('coffeetags')
     \ }
 endif
 
-" Nerd Tree 
+" Nerd Tree
 let NERDChristmasTree=0
 let NERDTreeWinSize=30
 let NERDTreeChDirMode=2
@@ -160,8 +179,8 @@ let g:user_zen_expandabbr_key='<C-j>'
 " NeoComplCache
 let g:neocomplcache_enable_at_startup=1
 let g:neoComplcache_disableautocomplete=1
-"let g:neocomplcache_enable_underbar_completion = 1
-"let g:neocomplcache_enable_camel_case_completion = 1
+let g:neocomplcache_enable_underbar_completion = 1
+let g:neocomplcache_enable_camel_case_completion = 1
 let g:neocomplcache_enable_smart_case=1
 let g:neocomplcache_min_syntax_length = 3
 let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
@@ -178,11 +197,18 @@ autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType c setlocal omnifunc=ccomplete#Complete
+autocmd FileType php set omnifunc=phpcomplete#CompletePHP
 
 " SuperTab
-"let g:SuperTabDefultCompletionType='context'
+let g:SuperTabDefultCompletionType='context'
 let g:SuperTabDefaultCompletionType = '<C-X><C-U>'
+let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
 let g:SuperTabRetainCompletionType=2
+
+" php cs fixer overrides
+let g:php_cs_fixer_path = "/usr/local/bin/php-cs-fixer"
+nnoremap <silent><leader>fd :call PhpCsFixerFixDirectory()<CR>
+nnoremap <silent><leader>ff :call PhpCsFixerFixFile()<CR>
 
 " ctrlp
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,.DS_Store  " MacOSX/Linux
@@ -190,17 +216,31 @@ let g:ctrlp_custom_ignore = '\.git$\|\.hg$\|\.svn$'
 
 " Keybindings for plugin toggle
 nmap <F5> :TagbarToggle<cr>
-nmap <F6> :NERDTreeToggle<cr>
+nmap <C-N> :NERDTreeToggle<cr>
 nmap <F3> :GundoToggle<cr>
 nmap <F4> :IndentGuidesToggle<cr>
 nnoremap <leader>a :Ack
 nnoremap <leader>v V`]
+
+" Tagbar
+nmap <C-M> :TagbarToggle<cr>
 
 " easier navigation between split windows
 nnoremap <c-j> <c-w>j
 nnoremap <c-k> <c-w>k
 nnoremap <c-h> <c-w>h
 nnoremap <c-l> <c-w>l
+
+" Bash like keys for the command line
+map <C-A>      <Home>
+map <C-E>      <End>
+map <C-K>      <C-U>
+
+" vnoremap <A-Right> e
+" vnoremap <A-Left>  b
+
+" set python make file
+:set makeprg=python\ %
 
 " eggcache vim
 :command W w
@@ -210,11 +250,35 @@ nnoremap <c-l> <c-w>l
 :command Qa qa
 :command QA qa
 
+" Automatically delete trailing DOS-returns and whitespace
+autocmd BufRead * silent! %s/[\r \t]\+$//
+autocmd BufEnter *.php :%s/[ \t\r]\+$//e
+
+" Display trailing spaces, tabs and end of lines
+" set list
+"set listchars=trail:-
+" highlight trailing whitespaces
+highlight ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$/
+autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+autocmd BufWinLeave * call clearmatches()
+
+" My information
+iab xdate <C-R>=strftime("%d/%m/%Y %H:%M:%S")
+iab xname <C-R> Lee Leathers
+iab xsigp <C-R> Lee Leathers <leeleathers@gmail.com>
+iab xsigw <C-R> Lee Leathers <leeleathers@gmail.com>
+
+" snipMate
+let g:snips_author = 'Lee Leathers <leeleathers@gmail.com>'
+
 " for macvim
 if has("gui_running")
     set go=aAce  " remove toolbar
     "set transparency=30
-    set guifont=Monaco:h13
+    set guifont=Monaco:h11
     set showtabline=2
     set columns=140
     set lines=40

@@ -5,7 +5,7 @@ set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
 " let Vundle manage Vundle
-" required! 
+" required!
 Bundle 'gmarik/vundle'
 
 "------------------
@@ -19,6 +19,12 @@ Bundle 'mattn/zencoding-vim'
 " snipmate dependencies
 Bundle 'MarcWeber/vim-addon-mw-utils'
 Bundle 'tomtom/tlib_vim'
+
+"-------------
+" PHP Plugins
+"-------------
+Bundle 'spf13/PIV'
+"Bundle 'vol0da/phpcomplete.vim'
 
 "-----------------
 " Fast navigation
@@ -92,5 +98,8 @@ Bundle 'rickharris/vim-monokai'
 Bundle 'tpope/vim-vividchalk'
 Bundle 'Lokaltog/vim-distinguished'
 Bundle 'chriskempson/vim-tomorrow-theme'
+
+" PHP CS Fixer
+Bundle 'stephpy/vim-php-cs-fixer'
 
 filetype plugin indent on     " required!
